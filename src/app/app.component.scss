@@ -1,0 +1,129 @@
+﻿@use "tokens" as *;
+
+// Component-specific tokens
+$accent-glow: rgba(41, 182, 246, 0.18);
+$nav-bg: #050d1a;
+
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  height: 58px;
+  background: rgba($nav-bg, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: $text-white;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    user-select: none;
+
+    mat-icon {
+      color: $accent-sky;
+      font-size: 22px !important;
+      width: 22px !important;
+      height: 22px !important;
+    }
+  }
+
+  .nav-tags {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+
+  .nav-tag {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    padding: 4px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  .nav-back-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+    color: $text-white;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 6px 14px 6px 10px;
+    cursor: pointer;
+    transition:
+      background 0.18s ease,
+      border-color 0.18s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.13);
+      border-color: rgba($accent-sky, 0.45);
+    }
+
+    mat-icon {
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+      color: $accent-sky;
+    }
+  }
+}
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 40px;
+  background: $nav-bg;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: $text-white;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    mat-icon {
+      color: $accent-sky;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+  }
+
+  .footer-data-types {
+    display: flex;
+    gap: 14px;
+
+    span {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+  }
+
+  .footer-tagline {
+    margin: 0 0 0 auto;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+}

@@ -1,0 +1,165 @@
+@use "tokens" as *;
+
+// ─── Form card (dark glassmorphism — mirrors the result card) ─────────────────
+.form-card {
+  background: rgba(8, 20, 48, 0.82);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.07);
+
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.3rem;
+      color: $text-white;
+
+      mat-icon {
+        color: $accent-sky;
+      }
+    }
+
+    mat-card-subtitle {
+      color: rgba($text-white, 0.54);
+    }
+  }
+
+  ::ng-deep {
+    .mat-mdc-form-field-hint,
+    .mat-mdc-form-field-subscript-wrapper {
+      color: rgba($text-white, 0.46) !important;
+    }
+
+    // Keep input text and placeholder white on hover/focus
+    .mat-mdc-input-element {
+      color: $text-white !important;
+      caret-color: $accent-sky;
+
+      &::placeholder {
+        color: rgba($text-white, 0.42) !important;
+        opacity: 1 !important;
+      }
+    }
+  }
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.field-full {
+  width: 100%;
+}
+
+// ─── Report Types ─────────────────────────────────────────────────────────────
+.report-type-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-type-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: $text-muted;
+}
+
+.report-type-group {
+  width: 100%;
+
+  .mat-button-toggle {
+    flex: 1;
+
+    .mat-button-toggle-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    mat-icon {
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: var(--mat-form-field-error-text-color, #f44336);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--mat-form-field-error-text-color, #f44336);
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+// ─── Form actions ─────────────────────────────────────────────────────────────
+.form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 4px;
+
+  // Shared: pill shape
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 50px !important;
+    font-weight: 600;
+    transition:
+      box-shadow 0.22s ease,
+      border-color 0.22s ease,
+      color 0.22s ease,
+      transform 0.22s ease;
+  }
+
+  // Primary action — full gradient (matches hero CTA)
+  .primary-action {
+    background: linear-gradient(135deg, #1565c0 0%, #29b6f6 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 22px rgba(41, 182, 246, 0.38);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 8px 32px rgba(41, 182, 246, 0.55);
+      transform: translateY(-2px);
+    }
+  }
+
+  // Secondary action (Reset) — ghost / outlined
+  button[mat-stroked-button] {
+    background: transparent !important;
+    border: 1px solid rgba($text-white, 0.28) !important;
+    color: rgba($text-white, 0.62) !important;
+    font-weight: 400;
+    box-shadow: none;
+
+    &:hover:not(:disabled) {
+      border-color: rgba($accent-sky, 0.55) !important;
+      color: $text-white !important;
+      transform: translateY(-1px);
+    }
+  }
+}

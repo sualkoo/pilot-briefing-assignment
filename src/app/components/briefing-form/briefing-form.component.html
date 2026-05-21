@@ -1,0 +1,106 @@
+<mat-card class="form-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>flight</mat-icon>
+      Pilot Briefing Assignment
+    </mat-card-title>
+    <mat-card-subtitle
+      >Select report types, then enter airport or country
+      codes.</mat-card-subtitle
+    >
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+      <div class="report-type-field">
+        <span class="report-type-label">Message Types</span>
+        <mat-button-toggle-group
+          formControlName="reportTypes"
+          multiple
+          aria-label="Report types"
+          class="report-type-group"
+        >
+          <mat-button-toggle value="METAR">
+            <mat-icon>thermostat</mat-icon>
+            METAR
+          </mat-button-toggle>
+          <mat-button-toggle value="SIGMET">
+            <mat-icon>warning</mat-icon>
+            SIGMET
+          </mat-button-toggle>
+          <mat-button-toggle value="TAF_LONGTAF">
+            <mat-icon>schedule</mat-icon>
+            TAF
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+        @if (
+          (reportTypesCtrl.touched || submitted) &&
+          reportTypesCtrl.hasError("noReportType")
+        ) {
+          <mat-error class="field-error"
+            >Select at least one report type.</mat-error
+          >
+        }
+      </div>
+
+      <mat-form-field appearance="outline" class="field-full">
+        <input
+          matInput
+          formControlName="airportCodes"
+          placeholder="Airports (ICAO)"
+          (input)="onCodesInput($event, 'airportCodes')"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <mat-icon matSuffix>local_airport</mat-icon>
+        <mat-hint>4-letter ICAO codes separated by spaces</mat-hint>
+        @if (airportCodesCtrl.touched && airportCodesCtrl.hasError("pattern")) {
+          <mat-error
+            >Use 4-letter uppercase ICAO codes (e.g.&nbsp;EGLL LFPG)</mat-error
+          >
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field-full">
+        <input
+          matInput
+          formControlName="countryCodes"
+          placeholder="Countries (WMO)"
+          (input)="onCodesInput($event, 'countryCodes')"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <mat-icon matSuffix>public</mat-icon>
+        <mat-hint>2-letter WMO country codes separated by spaces</mat-hint>
+        @if (countryCodesCtrl.touched && countryCodesCtrl.hasError("pattern")) {
+          <mat-error
+            >Use 2-letter uppercase WMO codes (e.g.&nbsp;DE FR NL)</mat-error
+          >
+        }
+      </mat-form-field>
+
+      @if (submitted && form.hasError("locationRequired")) {
+        <p class="form-error">
+          <mat-icon>info</mat-icon>
+          Enter at least one airport or country code.
+        </p>
+      }
+
+      <div class="form-actions">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="primary-action"
+        >
+          <mat-icon>search</mat-icon>
+          Create Briefing
+        </button>
+        <button mat-stroked-button type="button" (click)="reset()">
+          <mat-icon>clear</mat-icon>
+          Reset
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

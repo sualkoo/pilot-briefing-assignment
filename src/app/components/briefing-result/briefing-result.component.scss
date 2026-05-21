@@ -1,0 +1,196 @@
+@use "tokens" as *;
+
+// Component-specific tokens
+$border-subtle: rgba(255, 255, 255, 0.08);
+$row-hover: rgba(255, 255, 255, 0.04);
+
+// ─── Card shell ────
+:host {
+  display: block;
+  // Override Material card background to match the dark glass form card
+  --mat-card-elevated-container-color: rgba(8, 20, 48, 0.82);
+  --mdc-elevated-card-container-color: rgba(8, 20, 48, 0.82);
+}
+
+.result-card {
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.07) !important;
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    color: $text-white;
+
+    mat-icon {
+      color: $accent-sky;
+    }
+  }
+
+  mat-card-subtitle {
+    color: rgba(255, 255, 255, 0.54) !important;
+  }
+
+  .mat-mdc-card-content {
+    padding-top: 20px;
+  }
+}
+
+// ─── Loading ───────
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+
+  --mdc-circular-progress-active-indicator-color: #{$accent-sky};
+}
+
+// ─── Empty state ───
+.empty-msg {
+  text-align: center;
+  color: $text-muted;
+  padding: 40px 0;
+  font-size: 0.95rem;
+}
+
+// ─── Table wrapper ─
+.table-container {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid $border-subtle;
+}
+
+// ─── Table ─────────
+.reports-table {
+  width: 100%;
+
+  // Dark-theme CSS variable overrides
+  --mat-table-background-color: transparent;
+  --mat-table-row-item-label-text-color: #{rgba($text-white, 0.87)};
+  --mat-table-header-headline-color: #{rgba($text-white, 0.55)};
+  --mat-table-row-item-outline-color: #{$border-subtle};
+
+  .mat-mdc-header-row {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid $border-subtle;
+  }
+
+  .mat-mdc-header-cell {
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: none;
+  }
+
+  .mat-mdc-row {
+    border-bottom-color: $border-subtle;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: $row-hover;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .col-time {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+    color: rgba($text-white, 0.7);
+  }
+
+  .col-body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.82rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.7;
+  }
+}
+
+// ─── Group header row ─────────────────────────────────────────────────────────
+.group-header-row {
+  background: rgba($accent-sky, 0.1) !important;
+  border-left: 3px solid $accent-sky;
+
+  td {
+    border-bottom-color: rgba($accent-sky, 0.2);
+  }
+}
+
+.group-header-cell {
+  padding: 10px 16px 10px 13px !important;
+}
+
+.group-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: $accent-sky;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.station-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 0.8;
+}
+
+// ─── Cloud-cover highlighting ───
+.cloud-blue {
+  color: #64b5f6;
+  font-weight: 700;
+}
+
+.cloud-red {
+  color: #ef9a9a;
+  font-weight: 700;
+}
+
+// ─── Paginator dark theme ───
+mat-paginator {
+  --mat-paginator-container-text-color: #{rgba($text-white, 0.7)};
+  --mat-paginator-select-trigger-text-color: #{rgba($text-white, 0.87)};
+  --mat-paginator-disabled-icon-color: #{rgba($text-white, 0.3)};
+  --mat-paginator-enabled-icon-color: #{rgba($text-white, 0.7)};
+  --mat-paginator-background-color: transparent;
+  --mat-paginator-container-background-color: transparent;
+
+  --mat-select-trigger-text-color: #{rgba($text-white, 0.87)};
+  --mat-select-arrow-foreground-color: #{rgba($text-white, 0.7)};
+  --mdc-filled-text-field-input-text-color: #{rgba($text-white, 0.87)};
+  background: rgba(8, 22, 52, 0.72);
+  border-top: 1px solid $border-subtle;
+
+  ::ng-deep .mat-mdc-select-value-text {
+    color: rgba($text-white, 0.87) !important;
+  }
+
+  ::ng-deep .mat-mdc-select-arrow {
+    color: rgba($text-white, 0.6) !important;
+  }
+
+  ::ng-deep .mat-mdc-form-field .mdc-line-ripple::before {
+    border-bottom-color: rgba($text-white, 0.3) !important;
+  }
+
+  ::ng-deep .mat-mdc-form-field .mdc-line-ripple::after {
+    border-bottom-color: rgba($text-white, 0.5) !important;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    border: 1px solid rgba($text-white, 0.28);
+    border-radius: 4px;
+  }
+}

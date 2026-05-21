@@ -1,0 +1,28 @@
+<nav class="app-nav">
+  <div class="nav-brand">
+    <mat-icon>flight</mat-icon>
+    <span>Pilot Weather Briefing</span>
+  </div>
+
+  @if (router.url.startsWith("/briefing")) {
+    <button class="nav-back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to overview
+    </button>
+  }
+</nav>
+
+<router-outlet />
+
+<footer class="app-footer">
+  <div class="footer-brand">
+    <mat-icon>flight</mat-icon>
+    <span>Pilot Weather Briefing</span>
+  </div>
+  <div class="footer-data-types">
+    <span>METAR</span>
+    <span>TAF</span>
+    <span>SIGMET</span>
+  </div>
+  <p class="footer-tagline">Fly informed. Fly safe.</p>
+</footer>

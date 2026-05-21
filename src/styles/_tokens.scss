@@ -1,0 +1,65 @@
+@use "sass:math";
+@use "sass:list";
+
+// ─── Design tokens ────────────────────────────────────────────────────────────
+// Single source of truth for the dark-navy colour palette and layout constants.
+// Usage in component SCSS files:  @use 'tokens' as *;
+
+$sky-deep: #040c18;
+$sky-mid: #08162d;
+$sky-light: #0e2248;
+$accent-sky: #29b6f6;
+$text-white: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.62);
+$form-max: 740px;
+// ─── Mixins ───────────────────────────────────────────────────────────────────
+// Structural boilerplate for star-field atmosphere layers.
+// The gradient values (ellipses and star dots) are provided by each component.
+
+/// Positions the atmosphere container absolutely over its parent.
+@mixin atmosphere-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/// Sets up the ::before pseudo-element that holds the twinkling star dots.
+/// @param {Number} $duration - Animation cycle length (default 5s)
+@mixin starfield-pseudo($duration: 5s) {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  animation: twinkle $duration ease-in-out infinite alternate;
+}
+
+// ─── Functions ────────────────────────────────────────────────────────────────
+
+/// Generates a set of randomised radial-gradient star dots at compile time.
+/// Each build produces a unique star field; values are baked into the CSS bundle.
+/// @param {Number} $count       - Number of stars                 (default 20)
+/// @param {Number} $min-opacity - Minimum star brightness, 0–1   (default 0.3)
+/// @param {Number} $max-opacity - Maximum star brightness, 0–1   (default 0.8)
+@function generate-stars($count: 20, $min-opacity: 0.3, $max-opacity: 0.8) {
+  $gradients: ();
+  $opacity-steps: math.round(($max-opacity - $min-opacity) * 100);
+
+  @for $i from 1 through $count {
+    $x: math.random(100) * 1%;
+    $y: math.random(100) * 1%;
+    $size: if(math.random(3) == 1, 1.5px, 1px);
+    $opacity: $min-opacity + math.div(math.random($opacity-steps), 100);
+
+    $gradients: list.append(
+      $gradients,
+      radial-gradient(
+        #{$size} #{$size} at #{$x} #{$y},
+        rgba(255, 255, 255, $opacity) 0%,
+        transparent 100%
+      ),
+      $separator: comma
+    );
+  }
+
+  @return $gradients;
+}

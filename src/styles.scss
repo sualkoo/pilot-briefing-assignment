@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #040c18;
+}
+
+mat-card {
+  border-radius: 12px !important;
+}
+
+// ─── Shared animations ────────────────────────────────────────────────────────
+// Defined globally because @keyframes bleed through Angular's emulated
+// encapsulation anyway; keeping one copy avoids duplicate rule warnings.
+@keyframes twinkle {
+  0% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}

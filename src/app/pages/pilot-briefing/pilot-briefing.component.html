@@ -1,0 +1,22 @@
+<div class="briefing-page">
+  <div class="bv-atmosphere"></div>
+
+  <section class="briefing-view">
+    <div class="bv-inner">
+      <p class="bv-eyebrow">
+        <mat-icon>cloud</mat-icon>
+        Pre-Flight Weather Briefing
+      </p>
+      <app-briefing-form
+        (briefingRequested)="onBriefingRequested($event)"
+        (resetRequested)="onResetRequested()"
+      />
+    </div>
+  </section>
+
+  @if (loading() || result()) {
+    <section class="results-section">
+      <app-briefing-result [result]="result()" [loading]="loading()" />
+    </section>
+  }
+</div>

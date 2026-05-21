@@ -1,0 +1,132 @@
+﻿@use "tokens" as *;
+
+// ─── Page shell ───────────────────────────────────────────────────────────────
+// Single container gives a continuous background across the form and result
+// sections — no more gradient seam when the table appears.
+.briefing-page {
+  position: relative;
+  min-height: calc(100vh - 58px);
+  background: linear-gradient(
+    160deg,
+    $sky-deep 0%,
+    $sky-mid 55%,
+    $sky-light 100%
+  );
+  overflow: hidden;
+
+  // Material dark-theme CSS vars — cascade to both form and result cards
+  --mat-card-elevated-container-color: rgba(8, 20, 48, 0.82);
+  --mat-form-field-outlined-label-text-color: #{rgba(255, 255, 255, 0.58)};
+  --mat-form-field-outlined-focus-label-text-color: #{$accent-sky};
+  --mat-form-field-outlined-outline-color: rgba(255, 255, 255, 0.18);
+  --mat-form-field-outlined-hover-outline-color: rgba(255, 255, 255, 0.36);
+  --mat-form-field-outlined-focus-outline-color: #{$accent-sky};
+  --mat-form-field-outlined-input-text-color: #ffffff;
+  --mat-form-field-outlined-supporting-text-color: #{rgba(255, 255, 255, 0.46)};
+  --mat-select-trigger-text-color: #ffffff;
+  --mat-select-placeholder-text-color: #{rgba(255, 255, 255, 0.46)};
+  --mat-select-arrow-foreground-color: #{rgba(255, 255, 255, 0.5)};
+  --mat-button-outlined-label-text-color: #{rgba(255, 255, 255, 0.68)};
+  --mat-button-outlined-outline-color: rgba(255, 255, 255, 0.22);
+  --mat-button-toggle-text-color: #{rgba(255, 255, 255, 0.65)};
+  --mat-button-toggle-background-color: rgba(255, 255, 255, 0.05);
+  --mat-button-toggle-divider-color: rgba(255, 255, 255, 0.12);
+  --mat-button-toggle-selected-state-background-color: rgba(41, 182, 246, 0.22);
+  --mat-button-toggle-selected-state-text-color: #{$accent-sky};
+
+  /* stylelint-disable selector-pseudo-element-no-unknown */
+  ::ng-deep {
+    .mat-mdc-form-field [matSuffix] {
+      color: rgba(255, 255, 255, 0.44) !important;
+    }
+
+    .mdc-button--unelevated:disabled {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+      color: rgba(255, 255, 255, 0.44) !important;
+    }
+  }
+}
+
+// ─── Form section ─────────────────────────────────────────────────────────────
+.briefing-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bv-atmosphere {
+  @include atmosphere-layer;
+
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 15% 25%,
+      rgba(41, 182, 246, 0.11) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 55% 40% at 82% 60%,
+      rgba(99, 102, 241, 0.08) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 90% 30% at 50% 100%,
+      rgba(41, 182, 246, 0.06) 0%,
+      transparent 50%
+    );
+
+  &::before {
+    @include starfield-pseudo;
+    background-image: generate-stars(15);
+  }
+}
+
+.bv-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: $form-max;
+  padding: 52px 24px 72px;
+  animation: bv-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes bv-enter {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bv-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: $accent-sky;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// ─── Results section ──────────────────────────────────────────────────────────
+.results-section {
+  position: relative;
+  z-index: 2;
+  padding: 32px 24px 72px;
+
+  > app-briefing-result {
+    display: block;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+}
