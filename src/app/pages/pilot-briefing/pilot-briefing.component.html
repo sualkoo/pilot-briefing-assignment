@@ -14,9 +14,16 @@
     </div>
   </section>
 
-  @if (loading() || result()) {
+  @if (loading() || result() || error()) {
     <section class="results-section">
-      <app-briefing-result [result]="result()" [loading]="loading()" />
+      @if (error()) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ error() }}</span>
+        </div>
+      } @else {
+        <app-briefing-result [result]="result()" [loading]="loading()" />
+      }
     </section>
   }
 </div>

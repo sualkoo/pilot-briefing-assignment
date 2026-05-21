@@ -126,7 +126,27 @@
 
   > app-briefing-result {
     display: block;
-    max-width: 1120px;
+    max-width: 1440px;
     margin: 0 auto;
+  }
+}
+
+// ─── Error banner ─────────────────────────────────────────────────────────────
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  border-radius: 8px;
+  background: #7f1d1d;
+  border: 1px solid #ef4444;
+  color: #ffffff;
+  font-size: 0.9rem;
+
+  mat-icon {
+    flex-shrink: 0;
+    color: #fca5a5;
   }
 }

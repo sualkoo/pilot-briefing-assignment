@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, switchMap, throwError, of } from 'rxjs';
 import { BriefingRequest, BriefingResult } from '../models/briefing.models';
 
 interface ApiReportItem {
@@ -38,14 +38,19 @@ export class WeatherService {
     };
 
     return this.http.post<OpmetRpcResponse>(this.url, body).pipe(
-      map(({ result }) => ({
-        reports: result.map((r) => ({
-          stationId: r.stationId ?? '',
-          queryType: r.queryType ?? '',
-          reportTime: r.reportTime ?? '',
-          text: r.text ?? '',
-        })),
-      })),
+      switchMap(({ error, result }) => {
+        if (error) {
+          return throwError(() => new Error(error.message));
+        }
+        return of({
+          reports: result.map((r) => ({
+            stationId: r.stationId ?? '',
+            queryType: r.queryType ?? '',
+            reportTime: r.reportTime ?? '',
+            text: r.text ?? '',
+          })),
+        });
+      }),
     );
   }
 }
