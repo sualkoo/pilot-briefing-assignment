@@ -1,27 +1,48 @@
-# PilotBriefingAssignment
+# Pilot Briefing
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.12.
+A pre-flight weather briefing tool for pilots. Enter ICAO airport codes or WMO country codes, select one or more report types, and get the latest aviation weather data in a single view.
 
-## Development server
+**Supported report types:**
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **METAR** — current surface observations
+- **TAF** — terminal aerodrome forecasts
+- **SIGMET** — significant meteorological hazard alerts
 
-## Code scaffolding
+Weather data is fetched from the [IBLSoft OPMET RPC API](https://ogcie.iblsoft.com/ria/opmetquery). Results are grouped by station and displayed in a paginated table.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Prerequisites
 
-## Build
+- [Node.js](https://nodejs.org/) 18 or later
+- [Angular CLI](https://angular.dev/tools/cli) 21
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm install -g @angular/cli
+```
+
+## Setup
+
+```bash
+npm install
+```
+
+## Running locally
+
+```bash
+npm start
+```
+
+Navigate to `http://localhost:4200/`. The app reloads automatically on file changes.
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+npm test
+```
 
-## Running end-to-end tests
+## Production build
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+npm run build
+```
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Build artifacts are placed in the `dist/` directory.
