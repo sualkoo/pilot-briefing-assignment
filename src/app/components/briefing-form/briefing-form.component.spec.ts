@@ -169,12 +169,6 @@ describe('BriefingFormComponent', () => {
   // ── onCodesInput() ────────────────────────────────────────────────────────
 
   describe('onCodesInput()', () => {
-    it('should convert the DOM input value to uppercase', () => {
-      const event = makeInputEvent('egll');
-      component.onCodesInput(event, 'airportCodes');
-      expect((event.target as HTMLInputElement).value).toBe('EGLL');
-    });
-
     it('should update the airportCodes control to uppercase', () => {
       component.onCodesInput(makeInputEvent('egll'), 'airportCodes');
       expect(component.airportCodesControl.value).toBe('EGLL');

@@ -1,22 +1,17 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, effect, inject, input, LOCALE_ID } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { BriefingResult, WeatherReport } from '../../models/briefing.models';
-
-interface GroupRow {
-  isGroup: true;
-  stationId: string;
-}
-
-interface TextSegment {
-  text: string;
-  color: 'cloud-blue' | 'cloud-red' | null;
-}
-
-type TableRow = WeatherReport | GroupRow;
+import {
+  BriefingResult,
+  GroupRow,
+  TableRow,
+  TextSegment,
+  WeatherReport,
+} from '../../models/briefing.models';
+import { APP_TIMEZONE } from '../../app.config';
 
 @Component({
   selector: 'app-briefing-result',
@@ -30,10 +25,12 @@ type TableRow = WeatherReport | GroupRow;
   templateUrl: './briefing-result.component.html',
   styleUrl: './briefing-result.component.scss',
 })
-export class BriefingResultComponent implements OnChanges {
-  @Input() result: BriefingResult | null = null;
-  @Input() loading = false;
+export class BriefingResultComponent {
+  readonly result = input<BriefingResult | null>(null);
+  readonly loading = input(false);
 
+  private readonly locale = inject(LOCALE_ID);
+  private readonly timezone = inject(APP_TIMEZONE);
   tableData: TableRow[] = [];
   readonly displayedColumns = ['queryType', 'reportTime', 'text'];
 
@@ -43,11 +40,12 @@ export class BriefingResultComponent implements OnChanges {
   pageIndex = 0;
   readonly pageSizeOptions = [5, 10, 25, 50];
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['result']) {
+  constructor() {
+    effect(() => {
+      this.result();
       this.pageIndex = 0;
-    }
-    this.buildTableData();
+      this.buildTableData();
+    });
   }
 
   onPage(event: PageEvent): void {
@@ -62,8 +60,8 @@ export class BriefingResultComponent implements OnChanges {
 
   formatTime(isoString: string): string {
     if (!isoString) return '—';
-    return new Date(isoString).toLocaleString('sk-SK', {
-      timeZone: 'Europe/Bratislava',
+    return new Date(isoString).toLocaleString(this.locale, {
+      timeZone: this.timezone,
     });
   }
 
@@ -93,29 +91,47 @@ export class BriefingResultComponent implements OnChanges {
   }
 
   private buildTableData(): void {
-    if (!this.result) {
+    const result = this.result();
+    if (!result) {
       this.allReports = [];
       this.totalReports = 0;
       this.tableData = [];
       return;
     }
-    this.allReports = this.result.reports;
+
+    this.allReports = result.reports;
     this.totalReports = this.allReports.length;
 
     const start = this.pageIndex * this.pageSize;
-    const pageReports = this.allReports.slice(start, start + this.pageSize);
+    const pageReports = this.groupByStation(this.allReports).slice(
+      start,
+      start + this.pageSize,
+    );
 
+    this.tableData = this.buildRows(pageReports);
+  }
+
+  private groupByStation(reports: WeatherReport[]): WeatherReport[] {
     const grouped = new Map<string, WeatherReport[]>();
-    for (const r of pageReports) {
+    for (const r of reports) {
       if (!grouped.has(r.stationId)) {
         grouped.set(r.stationId, []);
       }
       grouped.get(r.stationId)!.push(r);
     }
+    return Array.from(grouped.values()).flat();
+  }
+
+  private buildRows(reports: WeatherReport[]): TableRow[] {
     const rows: TableRow[] = [];
-    for (const [stationId, reports] of grouped) {
-      rows.push({ isGroup: true, stationId }, ...reports);
+    let currentStation = '';
+    for (const r of reports) {
+      if (r.stationId !== currentStation) {
+        rows.push({ isGroup: true, stationId: r.stationId });
+        currentStation = r.stationId;
+      }
+      rows.push(r);
     }
-    this.tableData = rows;
+    return rows;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -44,8 +44,8 @@ const locationRequired: ValidatorFn = (
   styleUrl: './briefing-form.component.scss',
 })
 export class BriefingFormComponent {
-  @Output() briefingRequested = new EventEmitter<BriefingRequest>();
-  @Output() resetRequested = new EventEmitter<void>();
+  readonly briefingRequested = output<BriefingRequest>();
+  readonly resetRequested = output();
 
   submitted = false;
   form: FormGroup;
@@ -75,9 +75,8 @@ export class BriefingFormComponent {
     const input = event.target as HTMLInputElement;
     const pos = input.selectionStart ?? input.value.length;
     const upper = input.value.toUpperCase();
-    input.value = upper;
-    input.setSelectionRange(pos, pos);
     this.form.get(controlName)?.setValue(upper, { emitEvent: false });
+    requestAnimationFrame(() => input.setSelectionRange(pos, pos));
   }
 
   submit(): void {

@@ -4,7 +4,7 @@
     <span>Pilot Weather Briefing</span>
   </div>
 
-  @if (router.url.startsWith("/briefing")) {
+  @if (showBackButton()) {
     <button class="nav-back-btn" (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
       Back to overview

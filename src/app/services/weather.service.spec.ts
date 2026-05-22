@@ -6,9 +6,10 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 
 import { WeatherService } from './weather.service';
+import { API_URL } from '../app.config';
 import { BriefingRequest } from '../models/briefing.models';
 
-const API_URL = 'https://ogcie.iblsoft.com/ria/opmetquery';
+const API_ENDPOINT = 'https://ogcie.iblsoft.com/ria/opmetquery';
 
 function makeRequest(
   overrides: Partial<BriefingRequest> = {},
@@ -31,6 +32,7 @@ describe('WeatherService', () => {
         WeatherService,
         provideHttpClient(),
         provideHttpClientTesting(),
+        { provide: API_URL, useValue: API_ENDPOINT },
       ],
     });
     service = TestBed.inject(WeatherService);
@@ -46,7 +48,7 @@ describe('WeatherService', () => {
   describe('getBriefing', () => {
     it('should POST to the correct URL', () => {
       service.getBriefing(makeRequest()).subscribe();
-      const req = httpMock.expectOne(API_URL);
+      const req = httpMock.expectOne(API_ENDPOINT);
       expect(req.request.method).toBe('POST');
       req.flush({ error: null, result: [] });
     });
@@ -59,7 +61,7 @@ describe('WeatherService', () => {
       });
       service.getBriefing(request).subscribe();
 
-      const req = httpMock.expectOne(API_URL);
+      const req = httpMock.expectOne(API_ENDPOINT);
       const body = req.request.body;
 
       expect(body.method).toBe('query');
@@ -70,14 +72,14 @@ describe('WeatherService', () => {
       req.flush({ error: null, result: [] });
     });
 
-    it('should use incrementing IDs across successive calls', () => {
+    it('should use unique IDs across successive calls', () => {
       service.getBriefing(makeRequest()).subscribe();
-      const req1 = httpMock.expectOne(API_URL);
+      const req1 = httpMock.expectOne(API_ENDPOINT);
       const id1: string = req1.request.body.id;
       req1.flush({ error: null, result: [] });
 
       service.getBriefing(makeRequest()).subscribe();
-      const req2 = httpMock.expectOne(API_URL);
+      const req2 = httpMock.expectOne(API_ENDPOINT);
       const id2: string = req2.request.body.id;
       req2.flush({ error: null, result: [] });
 
@@ -96,7 +98,9 @@ describe('WeatherService', () => {
 
       let result: unknown;
       service.getBriefing(makeRequest()).subscribe((r) => (result = r));
-      httpMock.expectOne(API_URL).flush({ error: null, result: apiResult });
+      httpMock
+        .expectOne(API_ENDPOINT)
+        .flush({ error: null, result: apiResult });
 
       expect(result).toEqual({
         reports: [
@@ -115,7 +119,9 @@ describe('WeatherService', () => {
 
       let result: unknown;
       service.getBriefing(makeRequest()).subscribe((r) => (result = r));
-      httpMock.expectOne(API_URL).flush({ error: null, result: apiResult });
+      httpMock
+        .expectOne(API_ENDPOINT)
+        .flush({ error: null, result: apiResult });
 
       expect(result).toEqual({
         reports: [
@@ -127,7 +133,7 @@ describe('WeatherService', () => {
     it('should return an empty reports array for an empty result', () => {
       let result: unknown;
       service.getBriefing(makeRequest()).subscribe((r) => (result = r));
-      httpMock.expectOne(API_URL).flush({ error: null, result: [] });
+      httpMock.expectOne(API_ENDPOINT).flush({ error: null, result: [] });
 
       expect(result).toEqual({ reports: [] });
     });
@@ -139,7 +145,7 @@ describe('WeatherService', () => {
         .subscribe({ error: (e: Error) => (thrownError = e) });
 
       httpMock
-        .expectOne(API_URL)
+        .expectOne(API_ENDPOINT)
         .flush({ error: { code: 500, message: 'Server failure' }, result: [] });
 
       expect(thrownError).toBeInstanceOf(Error);
@@ -152,7 +158,9 @@ describe('WeatherService', () => {
         .getBriefing(makeRequest())
         .subscribe({ error: (e: unknown) => (thrownError = e) });
 
-      httpMock.expectOne(API_URL).error(new ProgressEvent('network error'));
+      httpMock
+        .expectOne(API_ENDPOINT)
+        .error(new ProgressEvent('network error'));
 
       expect(thrownError).toBeTruthy();
     });

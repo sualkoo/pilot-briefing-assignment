@@ -1,9 +1,19 @@
 import { Routes } from '@angular/router';
-import { LandingPageComponent } from './pages/landing-page/landing-page.component';
-import { PilotBriefingComponent } from './pages/pilot-briefing/pilot-briefing.component';
 
 export const routes: Routes = [
-  { path: '', component: LandingPageComponent },
-  { path: 'briefing', component: PilotBriefingComponent },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/landing-page/landing-page.component').then(
+        (m) => m.LandingPageComponent,
+      ),
+  },
+  {
+    path: 'briefing',
+    loadComponent: () =>
+      import('./pages/pilot-briefing/pilot-briefing.component').then(
+        (m) => m.PilotBriefingComponent,
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];

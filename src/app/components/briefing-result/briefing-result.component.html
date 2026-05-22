@@ -5,25 +5,25 @@
       Weather Reports
     </mat-card-title>
     <mat-card-subtitle>
-      @if (loading) {
+      @if (loading()) {
         Fetching live data…
-      } @else if (result) {
-        {{ result.reports.length }}
-        {{ result.reports.length === 1 ? "report" : "reports" }} · grouped by
+      } @else if (result()) {
+        {{ result()!.reports.length }}
+        {{ result()!.reports.length === 1 ? "report" : "reports" }} · grouped by
         Station ID
       }
     </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    @if (loading) {
+    @if (loading()) {
       <div class="loading-container">
         <mat-spinner diameter="48"></mat-spinner>
       </div>
     }
 
-    @if (!loading && result) {
-      @if (result.reports.length === 0) {
+    @if (!loading() && result()) {
+      @if (result()!.reports.length === 0) {
         <p class="empty-msg">No results returned.</p>
       } @else {
         <div class="table-container">

@@ -14,3 +14,15 @@ export interface BriefingRequest {
 export interface BriefingResult {
   reports: WeatherReport[];
 }
+
+export interface GroupRow {
+  isGroup: true;
+  stationId: string;
+}
+
+export interface TextSegment {
+  text: string;
+  color: 'cloud-blue' | 'cloud-red' | null;
+}
+
+export type TableRow = WeatherReport | GroupRow;

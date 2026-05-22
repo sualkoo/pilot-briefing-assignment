@@ -1,7 +1,8 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap, throwError, of } from 'rxjs';
 import { BriefingRequest, BriefingResult } from '../models/briefing.models';
+import { API_URL } from '../app.config';
 
 interface ApiReportItem {
   queryType: string;
@@ -17,13 +18,13 @@ interface OpmetRpcResponse {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
-  private readonly url = 'https://ogcie.iblsoft.com/ria/opmetquery';
-  private requestCounter = 0;
-
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    @Inject(API_URL) private readonly url: string,
+  ) {}
 
   getBriefing(request: BriefingRequest): Observable<BriefingResult> {
-    const id = ++this.requestCounter;
+    const id = crypto.randomUUID();
     const body = {
       id: `query-${id}`,
       method: 'query',

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SimpleChange } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 
 import { BriefingResultComponent } from './briefing-result.component';
+import { APP_TIMEZONE } from '../../app.config';
 import { BriefingResult, WeatherReport } from '../../models/briefing.models';
 
 function makeReport(
@@ -29,6 +29,7 @@ describe('BriefingResultComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BriefingResultComponent],
+      providers: [{ provide: APP_TIMEZONE, useValue: 'UTC' }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BriefingResultComponent);
@@ -42,11 +43,11 @@ describe('BriefingResultComponent', () => {
 
   describe('initial state', () => {
     it('should have result as null', () => {
-      expect(component.result).toBeNull();
+      expect(component.result()).toBeNull();
     });
 
     it('should have loading as false', () => {
-      expect(component.loading).toBeFalse();
+      expect(component.loading()).toBeFalse();
     });
 
     it('should have empty tableData', () => {
@@ -74,48 +75,42 @@ describe('BriefingResultComponent', () => {
     });
   });
 
-  describe('ngOnChanges', () => {
+  describe('result input', () => {
     it('should reset pageIndex to 0 when result changes', () => {
       component.pageIndex = 3;
-      component.result = makeResult([makeReport('LZIB')]);
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput('result', makeResult([makeReport('LZIB')]));
+      fixture.detectChanges();
       expect(component.pageIndex).toBe(0);
     });
 
     it('should not reset pageIndex when a different input changes', () => {
       component.pageIndex = 2;
-      component.ngOnChanges({
-        loading: new SimpleChange(false, true, false),
-      });
+      fixture.componentRef.setInput('loading', true);
+      fixture.detectChanges();
       expect(component.pageIndex).toBe(2);
     });
 
     it('should build table data after a result change', () => {
-      component.result = makeResult([makeReport('LZIB'), makeReport('LKPR')]);
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput(
+        'result',
+        makeResult([makeReport('LZIB'), makeReport('LKPR')]),
+      );
+      fixture.detectChanges();
       expect(component.totalReports).toBe(2);
     });
   });
 
-  describe('buildTableData (via ngOnChanges)', () => {
+  describe('buildTableData (via result input)', () => {
     it('should produce empty tableData when result is null', () => {
-      component.result = null;
-      component.ngOnChanges({
-        result: new SimpleChange(makeResult([]), null, false),
-      });
+      fixture.componentRef.setInput('result', null);
+      fixture.detectChanges();
       expect(component.tableData).toEqual([]);
       expect(component.totalReports).toBe(0);
     });
 
     it('should produce empty tableData when result has no reports', () => {
-      component.result = makeResult([]);
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput('result', makeResult([]));
+      fixture.detectChanges();
       expect(component.tableData).toEqual([]);
       expect(component.totalReports).toBe(0);
     });
@@ -126,10 +121,8 @@ describe('BriefingResultComponent', () => {
         makeReport('LZIB'),
         makeReport('LKPR'),
       ];
-      component.result = makeResult(reports);
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
 
       expect(component.tableData.length).toBe(5);
 
@@ -145,10 +138,8 @@ describe('BriefingResultComponent', () => {
         makeReport('LKPR'),
         makeReport('EGLL'),
       ];
-      component.result = makeResult(reports);
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
       expect(component.totalReports).toBe(3);
     });
 
@@ -156,14 +147,141 @@ describe('BriefingResultComponent', () => {
       const reports = Array.from({ length: 15 }, (_, i) =>
         makeReport(`ST${i}`),
       );
-      component.result = makeResult(reports);
       component.pageSize = 10;
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
 
       expect(component.tableData.length).toBe(20);
       expect(component.totalReports).toBe(15);
+    });
+
+    it('should not duplicate a station header across pages when reports are interleaved', () => {
+      const interleaved = Array.from({ length: 20 }, (_, i) =>
+        makeReport(i % 2 === 0 ? 'LZIB' : 'LKPR', { queryType: `T${i}` }),
+      );
+      component.pageSize = 10;
+      fixture.componentRef.setInput('result', makeResult(interleaved));
+      fixture.detectChanges();
+
+      const groupHeaders = component.tableData.filter(
+        (r) => (r as { isGroup?: boolean }).isGroup === true,
+      );
+      expect(groupHeaders.length).toBe(1);
+      expect((groupHeaders[0] as { stationId: string }).stationId).toBe('LZIB');
+    });
+  });
+
+  describe('groupByStation', () => {
+    it('should place all reports from the same station contiguously', () => {
+      const reports = [
+        makeReport('LZIB', { queryType: 'T0' }),
+        makeReport('LKPR', { queryType: 'T1' }),
+        makeReport('LZIB', { queryType: 'T2' }),
+        makeReport('LKPR', { queryType: 'T3' }),
+      ];
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
+
+      const dataReports = component.tableData.filter(
+        (r) => !(r as { isGroup?: boolean }).isGroup,
+      ) as WeatherReport[];
+      expect(dataReports.map((r) => r.stationId)).toEqual([
+        'LZIB',
+        'LZIB',
+        'LKPR',
+        'LKPR',
+      ]);
+    });
+
+    it('should preserve first-seen station order', () => {
+      const reports = [
+        makeReport('EGLL'),
+        makeReport('LZIB'),
+        makeReport('LKPR'),
+      ];
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
+
+      const headers = component.tableData.filter(
+        (r) => (r as { isGroup?: boolean }).isGroup,
+      ) as { stationId: string }[];
+      expect(headers.map((h) => h.stationId)).toEqual(['EGLL', 'LZIB', 'LKPR']);
+    });
+
+    it('should handle a single station without reordering', () => {
+      const reports = [
+        makeReport('LZIB', { queryType: 'T0' }),
+        makeReport('LZIB', { queryType: 'T1' }),
+        makeReport('LZIB', { queryType: 'T2' }),
+      ];
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
+
+      const dataReports = component.tableData.filter(
+        (r) => !(r as { isGroup?: boolean }).isGroup,
+      ) as WeatherReport[];
+      expect(dataReports.every((r) => r.stationId === 'LZIB')).toBeTrue();
+    });
+
+    it('should handle an empty reports array', () => {
+      fixture.componentRef.setInput('result', makeResult([]));
+      fixture.detectChanges();
+      expect(component.tableData).toEqual([]);
+    });
+  });
+
+  describe('buildRows', () => {
+    it('should produce exactly one header for a single-report result', () => {
+      fixture.componentRef.setInput('result', makeResult([makeReport('LZIB')]));
+      fixture.detectChanges();
+
+      expect(component.tableData.length).toBe(2);
+      expect(
+        (component.tableData[0] as { isGroup?: boolean }).isGroup,
+      ).toBeTrue();
+      expect(
+        (component.tableData[1] as { isGroup?: boolean }).isGroup,
+      ).toBeUndefined();
+    });
+
+    it('should produce one header for multiple reports from the same station', () => {
+      const reports = [
+        makeReport('LZIB', { queryType: 'T0' }),
+        makeReport('LZIB', { queryType: 'T1' }),
+        makeReport('LZIB', { queryType: 'T2' }),
+      ];
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
+
+      const headers = component.tableData.filter(
+        (r) => (r as { isGroup?: boolean }).isGroup,
+      );
+      expect(headers.length).toBe(1);
+      expect(component.tableData.length).toBe(4);
+    });
+
+    it('should insert a new header at each station boundary', () => {
+      const reports = [
+        makeReport('LZIB', { queryType: 'T0' }),
+        makeReport('LZIB', { queryType: 'T1' }),
+        makeReport('LKPR', { queryType: 'T2' }),
+      ];
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
+
+      expect(component.tableData.length).toBe(5);
+      expect((component.tableData[0] as { stationId?: string }).stationId).toBe(
+        'LZIB',
+      );
+      expect((component.tableData[3] as { stationId?: string }).stationId).toBe(
+        'LKPR',
+      );
+    });
+
+    it('should produce an empty row list for an empty result', () => {
+      fixture.componentRef.setInput('result', makeResult([]));
+      fixture.detectChanges();
+      expect(component.tableData).toEqual([]);
     });
   });
 
@@ -172,10 +290,8 @@ describe('BriefingResultComponent', () => {
       const reports = Array.from({ length: 20 }, (_, i) =>
         makeReport('LZIB', { queryType: `TYPE${i}` }),
       );
-      component.result = makeResult(reports);
-      component.ngOnChanges({
-        result: new SimpleChange(null, component.result, false),
-      });
+      fixture.componentRef.setInput('result', makeResult(reports));
+      fixture.detectChanges();
 
       const event: PageEvent = { pageIndex: 1, pageSize: 5, length: 20 };
       component.onPage(event);
