@@ -37,10 +37,10 @@ $form-max: 740px;
 
 /// Generates a set of randomised radial-gradient star dots at compile time.
 /// Each build produces a unique star field; values are baked into the CSS bundle.
-/// @param {Number} $count       - Number of stars                 (default 20)
-/// @param {Number} $min-opacity - Minimum star brightness, 0–1   (default 0.3)
-/// @param {Number} $max-opacity - Maximum star brightness, 0–1   (default 0.8)
-@function generate-stars($count: 20, $min-opacity: 0.3, $max-opacity: 0.8) {
+/// @param {Number} $count       - Number of stars                 (default 100)
+/// @param {Number} $min-opacity - Minimum star brightness, 0–1   (default 0.7)
+/// @param {Number} $max-opacity - Maximum star brightness, 0–1   (default 1)
+@function generate-stars($count: 100, $min-opacity: 0.7, $max-opacity: 1) {
   $gradients: ();
   $opacity-steps: math.round(($max-opacity - $min-opacity) * 100);
 
