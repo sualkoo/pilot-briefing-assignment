@@ -1,29 +1,69 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+
 import { AppComponent } from './app.component';
+import { routes } from './app.routes';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let router: Router;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [provideRouter(routes)],
     }).compileComponents();
-  });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have the 'pilot-briefing-assignment' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('pilot-briefing-assignment');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, pilot-briefing-assignment');
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('goBack', () => {
+    it('should navigate to the root route', async () => {
+      const navigateSpy = spyOn(router, 'navigate').and.resolveTo(true);
+      component.goBack();
+      expect(navigateSpy).toHaveBeenCalledOnceWith(['/']);
+    });
+  });
+
+  describe('template', () => {
+    it('should render the nav brand title', () => {
+      const nav = fixture.nativeElement.querySelector('.nav-brand span');
+      expect(nav.textContent.trim()).toBe('Pilot Weather Briefing');
+    });
+
+    it('should not show the back button on the root route', async () => {
+      await router.navigate(['/']);
+      fixture.detectChanges();
+      const btn = fixture.nativeElement.querySelector('.nav-back-btn');
+      expect(btn).toBeNull();
+    });
+
+    it('should show the back button on the /briefing route', async () => {
+      await router.navigate(['/briefing']);
+      fixture.detectChanges();
+      const btn = fixture.nativeElement.querySelector('.nav-back-btn');
+      expect(btn).toBeTruthy();
+    });
+
+    it('should call goBack when the back button is clicked', async () => {
+      await router.navigate(['/briefing']);
+      fixture.detectChanges();
+      const navigateSpy = spyOn(router, 'navigate').and.resolveTo(true);
+      fixture.nativeElement.querySelector('.nav-back-btn').click();
+      expect(navigateSpy).toHaveBeenCalledWith(['/']);
+    });
+
+    it('should render the footer tagline', () => {
+      const tagline = fixture.nativeElement.querySelector('.footer-tagline');
+      expect(tagline.textContent.trim()).toBe('Fly informed. Fly safe.');
+    });
   });
 });

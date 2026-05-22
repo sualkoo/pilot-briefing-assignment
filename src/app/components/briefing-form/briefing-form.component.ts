@@ -61,13 +61,13 @@ export class BriefingFormComponent {
     );
   }
 
-  get reportTypesCtrl() {
+  get reportTypesControl() {
     return this.form.get('reportTypes')!;
   }
-  get airportCodesCtrl() {
+  get airportCodesControl() {
     return this.form.get('airportCodes')!;
   }
-  get countryCodesCtrl() {
+  get countryCodesControl() {
     return this.form.get('countryCodes')!;
   }
 
@@ -95,7 +95,7 @@ export class BriefingFormComponent {
 
   reset(): void {
     this.submitted = false;
-    this.form.reset({ reportTypes: [], airports: '', countries: '' });
+    this.form.reset({ reportTypes: [], airportCodes: '', countryCodes: '' });
     this.resetRequested.emit();
   }
 }

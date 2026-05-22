@@ -34,8 +34,8 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
         @if (
-          (reportTypesCtrl.touched || submitted) &&
-          reportTypesCtrl.hasError("noReportType")
+          (reportTypesControl.touched || submitted) &&
+          reportTypesControl.hasError("noReportType")
         ) {
           <mat-error class="field-error"
             >Select at least one report type.</mat-error
@@ -54,7 +54,9 @@
         />
         <mat-icon matSuffix>local_airport</mat-icon>
         <mat-hint>4-letter ICAO codes separated by spaces</mat-hint>
-        @if (airportCodesCtrl.touched && airportCodesCtrl.hasError("pattern")) {
+        @if (
+          airportCodesControl.touched && airportCodesControl.hasError("pattern")
+        ) {
           <mat-error
             >Use 4-letter uppercase ICAO codes (e.g.&nbsp;EGLL LFPG)</mat-error
           >
@@ -72,7 +74,9 @@
         />
         <mat-icon matSuffix>public</mat-icon>
         <mat-hint>2-letter WMO country codes separated by spaces</mat-hint>
-        @if (countryCodesCtrl.touched && countryCodesCtrl.hasError("pattern")) {
+        @if (
+          countryCodesControl.touched && countryCodesControl.hasError("pattern")
+        ) {
           <mat-error
             >Use 2-letter uppercase WMO codes (e.g.&nbsp;DE FR NL)</mat-error
           >
