@@ -32,7 +32,7 @@ export class BriefingResultComponent {
   private readonly locale = inject(LOCALE_ID);
   private readonly timezone = inject(APP_TIMEZONE);
   tableData: TableRow[] = [];
-  readonly displayedColumns = ['queryType', 'reportTime', 'text'];
+  readonly displayedColumns = ['stationId', 'queryType', 'reportTime', 'text'];
 
   private allReports: WeatherReport[] = [];
   totalReports = 0;

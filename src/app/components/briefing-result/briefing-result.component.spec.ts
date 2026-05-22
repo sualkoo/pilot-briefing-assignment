@@ -68,6 +68,7 @@ describe('BriefingResultComponent', () => {
 
     it('should expose the correct displayedColumns', () => {
       expect(component.displayedColumns).toEqual([
+        'stationId',
         'queryType',
         'reportTime',
         'text',

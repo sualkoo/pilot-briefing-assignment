@@ -99,6 +99,11 @@ $row-hover: rgba(255, 255, 255, 0.04);
     }
   }
 
+  .col-station {
+    width: 120px;
+    min-width: 120px;
+  }
+
   .col-time {
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
