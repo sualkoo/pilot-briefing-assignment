@@ -12,7 +12,7 @@ Weather data is fetched from the [IBLSoft OPMET RPC API](https://ogcie.iblsoft.c
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 18 or later
+- [Node.js](https://nodejs.org/) 22 or later
 - [Angular CLI](https://angular.dev/tools/cli) 21
 
 ```bash
