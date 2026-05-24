@@ -19,8 +19,7 @@ export class PilotBriefingComponent {
   error = signal<string | null>(null);
 
   private readonly destroyRef = inject(DestroyRef);
-
-  constructor(private readonly weatherService: WeatherService) {}
+  private readonly weatherService = inject(WeatherService);
 
   onBriefingRequested(request: BriefingRequest): void {
     this.loading.set(true);

@@ -1,8 +1,7 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
@@ -48,18 +47,15 @@ export class BriefingFormComponent {
   readonly resetRequested = output();
 
   submitted = false;
-  form: FormGroup;
-
-  constructor(private readonly fb: FormBuilder) {
-    this.form = this.fb.group(
-      {
-        reportTypes: [[] as string[], [atLeastOneReportType]],
-        airportCodes: ['', [Validators.pattern(/^[A-Z]{4}(\s+[A-Z]{4})*$/)]],
-        countryCodes: ['', [Validators.pattern(/^[A-Z]{2}(\s+[A-Z]{2})*$/)]],
-      },
-      { validators: locationRequired },
-    );
-  }
+  private readonly fb = inject(FormBuilder);
+  form = this.fb.group(
+    {
+      reportTypes: [[] as string[], [atLeastOneReportType]],
+      airportCodes: ['', [Validators.pattern(/^[A-Z]{4}(\s+[A-Z]{4})*$/)]],
+      countryCodes: ['', [Validators.pattern(/^[A-Z]{2}(\s+[A-Z]{2})*$/)]],
+    },
+    { validators: locationRequired },
+  );
 
   get reportTypesControl() {
     return this.form.get('reportTypes')!;

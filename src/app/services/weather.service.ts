@@ -1,4 +1,4 @@
-﻿import { Inject, Injectable } from '@angular/core';
+﻿import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap, throwError, of } from 'rxjs';
 import { BriefingRequest, BriefingResult } from '../models/briefing.models';
@@ -18,10 +18,8 @@ interface OpmetRpcResponse {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherService {
-  constructor(
-    private readonly http: HttpClient,
-    @Inject(API_URL) private readonly url: string,
-  ) {}
+  private readonly http = inject(HttpClient);
+  private readonly url = inject(API_URL);
 
   getBriefing(request: BriefingRequest): Observable<BriefingResult> {
     const id = crypto.randomUUID();
