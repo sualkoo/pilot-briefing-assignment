@@ -65,29 +65,38 @@ export class BriefingResultComponent {
     });
   }
 
+  private readonly cloudPattern = /(?:BKN|FEW|SCT)\d{3}/g;
+  private readonly lowCloudThreshold = 30;
+
   getTextSegments(text: string): TextSegment[] {
     const segments: TextSegment[] = [];
-    const pattern = /(?:BKN|FEW|SCT)\d{3}/g;
     let lastIndex = 0;
-    let match: RegExpExecArray | null;
-    while ((match = pattern.exec(text)) !== null) {
+
+    for (const match of text.matchAll(this.cloudPattern)) {
       if (match.index > lastIndex) {
-        segments.push({
-          text: text.slice(lastIndex, match.index),
-          color: null,
-        });
+        segments.push(this.plainSegment(text.slice(lastIndex, match.index)));
       }
-      const value = Number.parseInt(match[0].slice(-3), 10);
-      segments.push({
-        text: match[0],
-        color: value <= 30 ? 'cloud-blue' : 'cloud-red',
-      });
-      lastIndex = pattern.lastIndex;
+      segments.push(this.cloudSegment(match[0]));
+      lastIndex = match.index + match[0].length;
     }
+
     if (lastIndex < text.length) {
-      segments.push({ text: text.slice(lastIndex), color: null });
+      segments.push(this.plainSegment(text.slice(lastIndex)));
     }
+
     return segments;
+  }
+
+  private plainSegment(text: string): TextSegment {
+    return { text, color: null };
+  }
+
+  private cloudSegment(token: string): TextSegment {
+    const altitude = Number.parseInt(token.slice(-3), 10);
+    return {
+      text: token,
+      color: altitude <= this.lowCloudThreshold ? 'cloud-blue' : 'cloud-red',
+    };
   }
 
   private buildTableData(): void {

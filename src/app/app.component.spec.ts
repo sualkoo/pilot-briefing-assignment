@@ -3,6 +3,7 @@ import { provideRouter, Router } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { routes } from './app.routes';
+import { API_URL, APP_TIMEZONE } from './app.config';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -12,7 +13,11 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [provideRouter(routes)],
+      providers: [
+        provideRouter(routes),
+        { provide: API_URL, useValue: 'https://test.invalid' },
+        { provide: APP_TIMEZONE, useValue: 'UTC' },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);

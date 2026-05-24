@@ -1,7 +1,11 @@
 ﻿import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap, throwError, of } from 'rxjs';
-import { BriefingRequest, BriefingResult } from '../models/briefing.models';
+import { Observable, map } from 'rxjs';
+import {
+  BriefingRequest,
+  BriefingResult,
+  WeatherReport,
+} from '../models/briefing.models';
 import { API_URL } from '../app.config';
 
 interface ApiReportItem {
@@ -22,8 +26,19 @@ export class WeatherService {
   private readonly url = inject(API_URL);
 
   getBriefing(request: BriefingRequest): Observable<BriefingResult> {
+    return this.http
+      .post<OpmetRpcResponse>(this.url, this.buildRequestBody(request))
+      .pipe(
+        map(({ error, result }) => {
+          if (error) throw new Error(error.message);
+          return { reports: result.map(toWeatherReport) };
+        }),
+      );
+  }
+
+  private buildRequestBody(request: BriefingRequest) {
     const id = crypto.randomUUID();
-    const body = {
+    return {
       id: `query-${id}`,
       method: 'query',
       params: [
@@ -35,21 +50,14 @@ export class WeatherService {
         },
       ],
     };
-
-    return this.http.post<OpmetRpcResponse>(this.url, body).pipe(
-      switchMap(({ error, result }) => {
-        if (error) {
-          return throwError(() => new Error(error.message));
-        }
-        return of({
-          reports: result.map((r) => ({
-            stationId: r.stationId ?? '',
-            queryType: r.queryType ?? '',
-            reportTime: r.reportTime ?? '',
-            text: r.text ?? '',
-          })),
-        });
-      }),
-    );
   }
+}
+
+function toWeatherReport(r: ApiReportItem): WeatherReport {
+  return {
+    stationId: r.stationId ?? '',
+    queryType: r.queryType ?? '',
+    reportTime: r.reportTime ?? '',
+    text: r.text ?? '',
+  };
 }

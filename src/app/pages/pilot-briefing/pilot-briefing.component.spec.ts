@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 
 import { PilotBriefingComponent } from './pilot-briefing.component';
 import { WeatherService } from '../../services/weather.service';
+import { APP_TIMEZONE } from '../../app.config';
 import { BriefingRequest, BriefingResult } from '../../models/briefing.models';
 
 function makeRequest(
@@ -31,7 +32,10 @@ describe('PilotBriefingComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PilotBriefingComponent],
-      providers: [{ provide: WeatherService, useValue: weatherServiceSpy }],
+      providers: [
+        { provide: WeatherService, useValue: weatherServiceSpy },
+        { provide: APP_TIMEZONE, useValue: 'UTC' },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PilotBriefingComponent);

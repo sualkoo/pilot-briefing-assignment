@@ -22,9 +22,7 @@ export class PilotBriefingComponent {
   private readonly weatherService = inject(WeatherService);
 
   onBriefingRequested(request: BriefingRequest): void {
-    this.loading.set(true);
-    this.result.set(null);
-    this.error.set(null);
+    this.clearState(true);
     this.weatherService
       .getBriefing(request)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -49,8 +47,12 @@ export class PilotBriefingComponent {
   }
 
   onResetRequested(): void {
+    this.clearState();
+  }
+
+  private clearState(loading = false): void {
     this.result.set(null);
     this.error.set(null);
-    this.loading.set(false);
+    this.loading.set(loading);
   }
 }
