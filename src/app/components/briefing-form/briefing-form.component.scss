@@ -1,6 +1,5 @@
 @use "tokens" as *;
 
-// ─── Form card (dark glassmorphism — mirrors the result card) ─────────────────
 .form-card {
   background: rgba(8, 20, 48, 0.82);
   backdrop-filter: blur(18px);
@@ -32,7 +31,6 @@
       color: rgba($text-white, 0.46) !important;
     }
 
-    // Keep input text and placeholder white on hover/focus
     .mat-mdc-input-element {
       color: $text-white !important;
       caret-color: $accent-sky;
@@ -56,7 +54,6 @@
   width: 100%;
 }
 
-// ─── Report Types ─────────────────────────────────────────────────────────────
 .report-type-field {
   display: flex;
   flex-direction: column;
@@ -115,13 +112,11 @@
   }
 }
 
-// ─── Form actions ─────────────────────────────────────────────────────────────
 .form-actions {
   display: flex;
   gap: 12px;
   padding-top: 4px;
 
-  // Shared: pill shape
   button {
     display: flex;
     align-items: center;
@@ -135,7 +130,6 @@
       transform 0.22s ease;
   }
 
-  // Primary action — full gradient (matches hero CTA)
   .primary-action {
     background: linear-gradient(135deg, #1565c0 0%, #29b6f6 100%) !important;
     border: none !important;
@@ -148,7 +142,6 @@
     }
   }
 
-  // Secondary action (Reset) — ghost / outlined
   button[mat-stroked-button] {
     background: transparent !important;
     border: 1px solid rgba($text-white, 0.28) !important;

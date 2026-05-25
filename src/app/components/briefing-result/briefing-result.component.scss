@@ -1,13 +1,10 @@
 @use "tokens" as *;
 
-// Component-specific tokens
 $border-subtle: rgba(255, 255, 255, 0.08);
 $row-hover: rgba(255, 255, 255, 0.04);
 
-// ─── Card shell ────
 :host {
   display: block;
-  // Override Material card background to match the dark glass form card
   --mat-card-elevated-container-color: rgba(8, 20, 48, 0.82);
   --mdc-elevated-card-container-color: rgba(8, 20, 48, 0.82);
 }
@@ -39,7 +36,6 @@ $row-hover: rgba(255, 255, 255, 0.04);
   }
 }
 
-// ─── Loading ───────
 .loading-container {
   display: flex;
   justify-content: center;
@@ -48,7 +44,6 @@ $row-hover: rgba(255, 255, 255, 0.04);
   --mdc-circular-progress-active-indicator-color: #{$accent-sky};
 }
 
-// ─── Empty state ───
 .empty-msg {
   text-align: center;
   color: $text-muted;
@@ -56,18 +51,15 @@ $row-hover: rgba(255, 255, 255, 0.04);
   font-size: 0.95rem;
 }
 
-// ─── Table wrapper ─
 .table-container {
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid $border-subtle;
 }
 
-// ─── Table ─────────
 .reports-table {
   width: 100%;
 
-  // Dark-theme CSS variable overrides
   --mat-table-background-color: transparent;
   --mat-table-row-item-label-text-color: #{rgba($text-white, 0.87)};
   --mat-table-header-headline-color: #{rgba($text-white, 0.55)};
@@ -120,7 +112,6 @@ $row-hover: rgba(255, 255, 255, 0.04);
   }
 }
 
-// ─── Group header row ─────────────────────────────────────────────────────────
 .group-header-row {
   background: rgba($accent-sky, 0.1) !important;
   border-left: 3px solid $accent-sky;
@@ -152,7 +143,6 @@ $row-hover: rgba(255, 255, 255, 0.04);
   opacity: 0.8;
 }
 
-// ─── Cloud-cover highlighting ───
 .cloud-blue {
   color: #64b5f6;
   font-weight: 700;
@@ -163,7 +153,6 @@ $row-hover: rgba(255, 255, 255, 0.04);
   font-weight: 700;
 }
 
-// ─── Paginator dark theme ───
 mat-paginator {
   --mat-paginator-container-text-color: #{rgba($text-white, 0.7)};
   --mat-paginator-select-trigger-text-color: #{rgba($text-white, 0.87)};

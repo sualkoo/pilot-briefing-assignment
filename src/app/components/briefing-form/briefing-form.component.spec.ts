@@ -27,8 +27,6 @@ describe('BriefingFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // ── Initial state ──────────────────────────────────────────────────────────
-
   describe('initial state', () => {
     it('should have submitted as false', () => {
       expect(component.submitted).toBeFalse();
@@ -51,8 +49,6 @@ describe('BriefingFormComponent', () => {
     });
   });
 
-  // ── Validators: reportTypes ────────────────────────────────────────────────
-
   describe('reportTypes validator', () => {
     it('should have noReportType error when no type is selected', () => {
       expect(component.reportTypesControl.hasError('noReportType')).toBeTrue();
@@ -68,8 +64,6 @@ describe('BriefingFormComponent', () => {
       expect(component.reportTypesControl.hasError('noReportType')).toBeFalse();
     });
   });
-
-  // ── Validators: airportCodes pattern ──────────────────────────────────────
 
   describe('airportCodes pattern validator', () => {
     it('should be valid for a single 4-letter ICAO code', () => {
@@ -108,8 +102,6 @@ describe('BriefingFormComponent', () => {
     });
   });
 
-  // ── Validators: countryCodes pattern ──────────────────────────────────────
-
   describe('countryCodes pattern validator', () => {
     it('should be valid for a single 2-letter WMO code', () => {
       component.countryCodesControl.setValue('DE');
@@ -142,8 +134,6 @@ describe('BriefingFormComponent', () => {
     });
   });
 
-  // ── Validators: locationRequired (form-level) ─────────────────────────────
-
   describe('locationRequired form-level validator', () => {
     it('should report locationRequired when both fields are empty', () => {
       expect(component.form.hasError('locationRequired')).toBeTrue();
@@ -166,8 +156,6 @@ describe('BriefingFormComponent', () => {
     });
   });
 
-  // ── onCodesInput() ────────────────────────────────────────────────────────
-
   describe('onCodesInput()', () => {
     it('should update the airportCodes control to uppercase', () => {
       component.onCodesInput(makeInputEvent('egll'), 'airportCodes');
@@ -184,8 +172,6 @@ describe('BriefingFormComponent', () => {
       expect(component.airportCodesControl.value).toBe('EGLL LFPG');
     });
   });
-
-  // ── submit() ──────────────────────────────────────────────────────────────
 
   describe('submit()', () => {
     it('should set submitted to true', () => {
@@ -285,8 +271,6 @@ describe('BriefingFormComponent', () => {
       });
     });
   });
-
-  // ── reset() ───────────────────────────────────────────────────────────────
 
   describe('reset()', () => {
     beforeEach(() => {

@@ -1,8 +1,5 @@
 ﻿@use "tokens" as *;
 
-// ─── Page shell ───────────────────────────────────────────────────────────────
-// Single container gives a continuous background across the form and result
-// sections — no more gradient seam when the table appears.
 .briefing-page {
   position: relative;
   min-height: calc(100vh - 58px);
@@ -14,7 +11,6 @@
   );
   overflow: hidden;
 
-  // Material dark-theme CSS vars — cascade to both form and result cards
   --mat-card-elevated-container-color: rgba(8, 20, 48, 0.82);
   --mat-form-field-outlined-label-text-color: #{rgba(255, 255, 255, 0.58)};
   --mat-form-field-outlined-focus-label-text-color: #{$accent-sky};
@@ -34,7 +30,6 @@
   --mat-button-toggle-selected-state-background-color: rgba(41, 182, 246, 0.22);
   --mat-button-toggle-selected-state-text-color: #{$accent-sky};
 
-  /* stylelint-disable selector-pseudo-element-no-unknown */
   ::ng-deep {
     .mat-mdc-form-field [matSuffix] {
       color: rgba(255, 255, 255, 0.44) !important;
@@ -47,7 +42,6 @@
   }
 }
 
-// ─── Form section ─────────────────────────────────────────────────────────────
 .briefing-view {
   display: flex;
   flex-direction: column;
@@ -118,7 +112,6 @@
   }
 }
 
-// ─── Results section ──────────────────────────────────────────────────────────
 .results-section {
   position: relative;
   z-index: 2;
@@ -131,7 +124,6 @@
   }
 }
 
-// ─── Error banner ─────────────────────────────────────────────────────────────
 .error-banner {
   display: flex;
   align-items: center;
